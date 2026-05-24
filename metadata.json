@@ -1,0 +1,6 @@
+{
+  "name": "Mafia Local",
+  "description": "A modern offline multiplayer Mafia game using local Wi-Fi or hotspot connections.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
