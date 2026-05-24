@@ -29,8 +29,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MafiaApp() {
+  val context = androidx.compose.ui.platform.LocalContext.current
+  val application = context.applicationContext as android.app.Application
+  val factory = androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+  
   val navController = rememberNavController()
-  val viewModel: GameViewModel = viewModel()
+  val viewModel: GameViewModel = viewModel(factory = factory)
   
   NavHost(navController = navController, startDestination = "main_menu") {
     composable("main_menu") {

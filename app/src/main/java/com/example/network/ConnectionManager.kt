@@ -20,7 +20,7 @@ import java.net.ServerSocket
 import java.net.Socket
 
 class ConnectionManager(private val context: Context) {
-    private val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
+    private val nsdManager by lazy { context.getSystemService(Context.NSD_SERVICE) as? NsdManager }
     private val SERVICE_TYPE = "_mafia._tcp."
     private var serverSocket: ServerSocket? = null
     
@@ -47,7 +47,7 @@ class ConnectionManager(private val context: Context) {
             setPort(actualPort)
         }
         
-        nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.RegistrationListener {
+        nsdManager?.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.RegistrationListener {
             override fun onServiceRegistered(NsdServiceInfo: NsdServiceInfo) {
                 Log.d("ConnectionManager", "Service registered: ${NsdServiceInfo.serviceName}")
             }
@@ -73,11 +73,11 @@ class ConnectionManager(private val context: Context) {
     // Client
     fun discoverAndConnect(playerName: String, myPlayerId: String) {
         myId = myPlayerId
-        nsdManager.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.DiscoveryListener {
+        nsdManager?.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, object : NsdManager.DiscoveryListener {
             override fun onDiscoveryStarted(regType: String) {}
             override fun onServiceFound(service: NsdServiceInfo) {
                 if (service.serviceType == SERVICE_TYPE) {
-                    nsdManager.resolveService(service, object : NsdManager.ResolveListener {
+                    nsdManager?.resolveService(service, object : NsdManager.ResolveListener {
                         override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {}
                         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
                             connectToHost(serviceInfo.host, serviceInfo.port, playerName)
